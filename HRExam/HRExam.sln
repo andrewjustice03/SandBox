@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRExam", "HRExam\HRExam.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{1994E333-42F3-4BA5-B3C9-C858B1EC0FEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HRSystem-Core", "..\HRSystem-Core\HRSystem-Core.csproj", "{B9066518-83C8-4309-91D8-CF61FCA6BBC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API-Core", "API-Core\API-Core.csproj", "{9DF068FD-4EFA-4D0D-9787-6AB877353637}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{1994E333-42F3-4BA5-B3C9-C858B1EC0FEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1994E333-42F3-4BA5-B3C9-C858B1EC0FEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1994E333-42F3-4BA5-B3C9-C858B1EC0FEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9066518-83C8-4309-91D8-CF61FCA6BBC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9066518-83C8-4309-91D8-CF61FCA6BBC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9066518-83C8-4309-91D8-CF61FCA6BBC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9066518-83C8-4309-91D8-CF61FCA6BBC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DF068FD-4EFA-4D0D-9787-6AB877353637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DF068FD-4EFA-4D0D-9787-6AB877353637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DF068FD-4EFA-4D0D-9787-6AB877353637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DF068FD-4EFA-4D0D-9787-6AB877353637}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
