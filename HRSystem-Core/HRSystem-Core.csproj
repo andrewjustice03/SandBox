@@ -5,4 +5,8 @@
     <RootNamespace>HRSystem_Core</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HRExam\Common\Common.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,186 @@
+{
+	"info": {
+		"_postman_id": "5016496c-ec4d-48e6-9184-fbd5ba82efab",
+		"name": "Sandbox",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:44310/api/employee/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"employee",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"name\": \"nullsss\",\r\n    \"birthday\": \"0001-01-01T00:00:00\",\r\n    \"tin\": \"nullzzz\",\r\n    \"employeeType\": 0,\r\n    \"rate\" : 20000,\r\n    \"tax\" : 0.12\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44310/api/employee",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"employee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"31a0854f-c3f6-4cd2-be38-e13ac407dbeb\",\r\n    \"name\": \"Juan Dela Cruz1\",\r\n    \"birthday\": \"1990-07-06\",\r\n    \"tin\": \"406-809-332-000\",\r\n    \"employeeType\": 1,\r\n    \"rate\" : 500,\r\n    \"tax\" : 0\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44310/api/employee",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"employee"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Compute Salary",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44310/api/employee/computesalary?id=31a0854f-c3f6-4cd2-be38-e13ac407dbeb&daysPresent=15.5&workDaysInMonth=22",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"employee",
+						"computesalary"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "31a0854f-c3f6-4cd2-be38-e13ac407dbeb"
+						},
+						{
+							"key": "daysPresent",
+							"value": "15.5"
+						},
+						{
+							"key": "workDaysInMonth",
+							"value": "22"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"7d8c573d-8e3b-49ce-82f6-ca75bcd42214\",\r\n    \"name\": \"Juan Dela Cruz1\",\r\n    \"birthday\": \"1990-07-06\",\r\n    \"tin\": \"406-809-332-000\",\r\n    \"employeeType\": 0,\r\n    \"rate\" : 20000,\r\n    \"tax\" : 0.12\r\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44310/api/employee",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44310",
+					"path": [
+						"api",
+						"employee"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
