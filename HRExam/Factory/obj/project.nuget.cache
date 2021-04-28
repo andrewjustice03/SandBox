@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "8RCxk08TyyEaDukbUvh6VYOg1pAqsgNGH+teWrN38VhuZE2QEvoV3Zlan2yzUSm0I78AK23f/0W1XHvYW9I8pg==",
+  "success": false,
+  "projectFilePath": "C:\\Users\\Andrew-GamingLaptop\\source\\repos\\andrewjustice03\\SandBox\\HRExam\\Factory\\Service.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1201",
+      "level": "Error",
+      "message": "Project Common is not compatible with netstandard2.1 (.NETStandard,Version=v2.1). Project Common supports: netcoreapp3.1 (.NETCoreApp,Version=v3.1)",
+      "libraryId": "Common",
+      "targetGraphs": [
+        ".NETStandard,Version=v2.1"
+      ]
+    }
+  ]
+}
