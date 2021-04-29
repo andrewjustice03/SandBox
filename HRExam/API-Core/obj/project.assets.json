@@ -1,11 +1,49 @@
 {
   "version": 3,
   "targets": {
-    ".NETCoreApp,Version=v3.1": {}
+    ".NETCoreApp,Version=v3.1": {
+      "Common/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/Common.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Common.dll": {}
+        }
+      },
+      "Service/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "dependencies": {
+          "Common": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/Service.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Service.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Common/1.0.0": {
+      "type": "project",
+      "path": "../Common/Common.csproj",
+      "msbuildProject": "../Common/Common.csproj"
+    },
+    "Service/1.0.0": {
+      "type": "project",
+      "path": "../Service/Service.csproj",
+      "msbuildProject": "../Service/Service.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    ".NETCoreApp,Version=v3.1": []
+    ".NETCoreApp,Version=v3.1": [
+      "Common >= 1.0.0",
+      "Service >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Andrew-GamingLaptop\\.nuget\\packages\\": {},
@@ -36,7 +74,14 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Andrew-GamingLaptop\\source\\repos\\andrewjustice03\\SandBox\\HRExam\\Common\\Common.csproj": {
+              "projectPath": "C:\\Users\\Andrew-GamingLaptop\\source\\repos\\andrewjustice03\\SandBox\\HRExam\\Common\\Common.csproj"
+            },
+            "C:\\Users\\Andrew-GamingLaptop\\source\\repos\\andrewjustice03\\SandBox\\HRExam\\Service\\Service.csproj": {
+              "projectPath": "C:\\Users\\Andrew-GamingLaptop\\source\\repos\\andrewjustice03\\SandBox\\HRExam\\Service\\Service.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
