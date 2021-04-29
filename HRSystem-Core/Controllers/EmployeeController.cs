@@ -1,114 +1,183 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Common;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Common;
+using HRSystem_Core.Data;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace HRSystem_Core.Controllers
 {
     public class EmployeeController : Controller
     {
-        // GET: EmployeeController
-        public ActionResult Index()
+        private readonly HRSystem_CoreContext _context;
+
+        public EmployeeController(HRSystem_CoreContext context)
         {
-            //using (var client = new HttpClient())
-            //{
-            //    client.BaseAddress = new Uri("http://localhost:44310/api/");
-            //    //HTTP GET
-            //    var responseTask = client.GetAsync("employee");
-            //    responseTask.Wait();
+            _context = context;
+        }
 
-            //    var result = responseTask.Result;
-            //    if (result.IsSuccessStatusCode)
-            //    {
-            //        var readTask = result.Content.ReadAsAs
-            //        readTask.Wait();
+        // GET: Employee
+        public async Task<IActionResult> Index()
+        {
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    //client.BaseAddress = new Uri("http://localhost:44310/api/");
 
-            //        students = readTask.Result;
-            //    }
-            //    else //web api sent error response 
-            //    {
-            //        //log response status here..
+                    //HTTP GET
+                    var getEmployee = client.GetAsync("https://localhost:44310/api/employee/");
+                    getEmployee.Wait();
 
-            //        students = Enumerable.Empty<StudentViewModel>();
+                    var result = getEmployee.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var buffer = await result.Content.ReadAsStreamAsync();
+                        var buffer1 = await result.Content.ReadAsStringAsync();
+                        var buffer2 = await result.Content.ReadAsByteArrayAsync();
+                        var readEmployee = JsonSerializer.Deserialize<EmployeeModel>(Regex.Unescape(buffer1));
+                        return View("Index", readEmployee);
+                    }
+                }
+                catch (AggregateException err)
+                {
+                }
 
-            //        ModelState.AddModelError(string.Empty, "Server error. Please contact administrator.");
-            //    }
-            //}
+            }
 
             return View();
         }
 
-        // GET: EmployeeController/Details/5
-        public ActionResult Details(int id)
+        // GET: Employee/Details/5
+        public async Task<IActionResult> Details(Guid? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employeeModel = await _context.EmployeeModel
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (employeeModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(employeeModel);
+        }
+
+        // GET: Employee/Create
+        public IActionResult Create()
         {
             return View();
         }
 
-        // GET: EmployeeController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: EmployeeController/Create
+        // POST: Employee/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create([Bind("Id,Name,Birthday,TIN,EmployeeType,Rate,Tax")] EmployeeModel employeeModel)
         {
-            try
+            if (ModelState.IsValid)
             {
+                employeeModel.Id = Guid.NewGuid();
+                _context.Add(employeeModel);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(employeeModel);
         }
 
-        // GET: EmployeeController/Edit/5
-        public ActionResult Edit(int id)
+        // GET: Employee/Edit/5
+        public async Task<IActionResult> Edit(Guid? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employeeModel = await _context.EmployeeModel.FindAsync(id);
+            if (employeeModel == null)
+            {
+                return NotFound();
+            }
+            return View(employeeModel);
         }
 
-        // POST: EmployeeController/Edit/5
+        // POST: Employee/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,Birthday,TIN,EmployeeType,Rate,Tax")] EmployeeModel employeeModel)
         {
-            try
+            if (id != employeeModel.Id)
             {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(employeeModel);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!EmployeeModelExists(employeeModel.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(employeeModel);
         }
 
-        // GET: EmployeeController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: Employee/Delete/5
+        public async Task<IActionResult> Delete(Guid? id)
         {
-            return View();
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var employeeModel = await _context.EmployeeModel
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (employeeModel == null)
+            {
+                return NotFound();
+            }
+
+            return View(employeeModel);
         }
 
-        // POST: EmployeeController/Delete/5
-        [HttpPost]
+        // POST: Employee/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var employeeModel = await _context.EmployeeModel.FindAsync(id);
+            _context.EmployeeModel.Remove(employeeModel);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool EmployeeModelExists(Guid id)
+        {
+            return _context.EmployeeModel.Any(e => e.Id == id);
         }
     }
 }

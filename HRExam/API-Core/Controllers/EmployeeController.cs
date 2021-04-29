@@ -15,9 +15,9 @@ namespace API_Core.Controllers
     public class EmployeeController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<EmployeeModel> Get()
+        public List<EmployeeModel> Get()
         {
-            return PretendDB.Employees;
+            return PretendDB.Employees.ToList<EmployeeModel>();
         }
 
         [HttpPost]
