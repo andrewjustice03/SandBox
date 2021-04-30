@@ -4,9 +4,17 @@ using System.Text;
 
 namespace Common
 {
+    public class EmployeeList
+    {
+        public EmployeeList()
+        {
+            EmployeeCollection = new List<EmployeeModel>();
+        }
+        public List<EmployeeModel> EmployeeCollection { get; set; }
+    }
     public class EmployeeModel
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
 
         public string Name { get; set; }
 
