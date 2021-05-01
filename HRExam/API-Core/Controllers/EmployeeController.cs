@@ -17,6 +17,10 @@ namespace API_Core.Controllers
         [HttpGet]
         public List<EmployeeModel> Get()
         {
+            if (PretendDB.Employees == null)
+            {
+                return new List<EmployeeModel>();
+            }
             return PretendDB.Employees.EmployeeCollection;
         }
 
@@ -57,10 +61,10 @@ namespace API_Core.Controllers
         }
 
         [HttpDelete]
-        public void Delete(EmployeeModel employeeModel)
+        public void Delete(string id)
         {
 
-            var modelToDelete = PretendDB.Employees.EmployeeCollection.FirstOrDefault(_ => _.Id == employeeModel.Id);
+            var modelToDelete = PretendDB.Employees.EmployeeCollection.FirstOrDefault(_ => _.Id == id);
 
             if (modelToDelete != null)
             {

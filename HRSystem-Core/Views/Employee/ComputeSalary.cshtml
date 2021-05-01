@@ -1,0 +1,38 @@
+﻿@model HRSystem_Core.Models.EmployeeViewModel
+
+<h4>Compute Salary</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ComputeSalary">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input hidden="hidden" asp-for="EmployeeId" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="DaysPresent" class="control-label"></label>
+                <input asp-for="DaysPresent" class="form-control" />
+                <span asp-validation-for="DaysPresent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="WorkDaysInMonth" class="control-label"></label>
+                <input asp-for="WorkDaysInMonth" class="form-control" />
+                <span asp-validation-for="WorkDaysInMonth" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Compute Salary" class="btn btn-primary" />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Salary" class="control-label"></label>
+                <input disabled="disabled" asp-for="Salary" class="form-control" />
+                <span asp-validation-for="Salary" class="text-danger"></span>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

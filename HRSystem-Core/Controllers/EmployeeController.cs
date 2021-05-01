@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Text;
+using HRSystem_Core.Models;
 
 namespace HRSystem_Core.Controllers
 {
@@ -32,9 +33,6 @@ namespace HRSystem_Core.Controllers
             {
                 try
                 {
-                    //client.BaseAddress = new Uri("http://localhost:44310/api/");
-
-                    //HTTP GET
                     var getEmployee = client.GetAsync("https://localhost:44310/api/employee/");
                     getEmployee.Wait();
 
@@ -50,6 +48,7 @@ namespace HRSystem_Core.Controllers
                 }
                 catch (Exception err)
                 {
+                    throw new Exception("Error on listing data!", err);
                 }
 
             }
@@ -64,24 +63,23 @@ namespace HRSystem_Core.Controllers
             {
                 try
                 {
-                    //client.BaseAddress = new Uri("http://localhost:44310/api/");
-
-                    //HTTP GET
                     var getEmployee = client.GetAsync("https://localhost:44310/api/employee/details?id=" + id);
                     getEmployee.Wait();
 
                     var result = getEmployee.Result;
                     if (result.IsSuccessStatusCode)
                     {
-                        var buffer = await result.Content.ReadAsStreamAsync();
                         var buffer1 = await result.Content.ReadAsStringAsync();
-
                         var readEmployee = JsonConvert.DeserializeObject<EmployeeModel>(buffer1);
-                        return View(readEmployee);
+                        var returnObj = new EmployeeViewModel();
+                        returnObj.Employee = readEmployee;
+                        return View(returnObj);
                     }
                 }
                 catch (Exception err)
                 {
+
+                    throw new Exception("Error on getting details!", err);
                 }
 
             }
@@ -107,10 +105,9 @@ namespace HRSystem_Core.Controllers
             {
                 try
                 {
-                    //client.BaseAddress = new Uri("http://localhost:44310/api/");
+                    employeeModel.Tax = employeeModel.Tax / 100; // convert to real percentage
                     var payload = JsonConvert.SerializeObject(employeeModel);
                     var content = new StringContent(payload, Encoding.UTF8, "application/json");
-                    //HTTP POST
                     var postEmployee = client.PostAsync("https://localhost:44310/api/employee", content);
                     postEmployee.Wait();
 
@@ -121,40 +118,48 @@ namespace HRSystem_Core.Controllers
                         var buffer1 = await result.Content.ReadAsStringAsync();
 
                         var readEmployee = JsonConvert.DeserializeObject<EmployeeModel>(buffer1);
-                        return RedirectToAction("Details", readEmployee.Id);
+                        return RedirectToAction("Details", new { id = readEmployee.Id });
                     }
                 }
                 catch (Exception err)
                 {
+                    throw new Exception("Error during create!", err);
                 }
 
             }
 
             return View(employeeModel);
-            //if (ModelState.IsValid)
-            //{
-            //    employeeModel.Id = Guid.NewGuid().ToString();
-            //    _context.Add(employeeModel);
-            //    await _context.SaveChangesAsync();
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(employeeModel);
         }
 
         // GET: Employee/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public async Task<IActionResult> Edit(string? id)
         {
-            if (id == null)
+            using (var client = new HttpClient())
             {
-                return NotFound();
+                try
+                {
+                    var getEmployee = client.GetAsync("https://localhost:44310/api/employee/details?id=" + id);
+                    getEmployee.Wait();
+
+                    var result = getEmployee.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var buffer = await result.Content.ReadAsStreamAsync();
+                        var buffer1 = await result.Content.ReadAsStringAsync();
+
+                        var readEmployee = JsonConvert.DeserializeObject<EmployeeModel>(buffer1);
+                        readEmployee.Tax = readEmployee.Tax * 100;
+                        return View(readEmployee);
+                    }
+                }
+                catch (Exception err)
+                {
+                    throw new Exception("Error while getting data!", err);
+                }
+
             }
 
-            var employeeModel = await _context.EmployeeModel.FindAsync(id);
-            if (employeeModel == null)
-            {
-                return NotFound();
-            }
-            return View(employeeModel);
+            return NotFound();
         }
 
         // POST: Employee/Edit/5
@@ -164,50 +169,65 @@ namespace HRSystem_Core.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Birthday,TIN,EmployeeType,Rate,Tax")] EmployeeModel employeeModel)
         {
-            if (id != employeeModel.Id)
-            {
-                return NotFound();
-            }
 
-            if (ModelState.IsValid)
+            using (var client = new HttpClient())
             {
                 try
                 {
-                    _context.Update(employeeModel);
-                    await _context.SaveChangesAsync();
+                    employeeModel.Tax = employeeModel.Tax / 100; // convert to real percentage
+                    var payload = JsonConvert.SerializeObject(employeeModel);
+                    var content = new StringContent(payload, Encoding.UTF8, "application/json");
+                    var putEmployee = client.PutAsync("https://localhost:44310/api/employee", content);
+                    putEmployee.Wait();
+
+                    var result = putEmployee.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var buffer = await result.Content.ReadAsStreamAsync();
+                        var buffer1 = await result.Content.ReadAsStringAsync();
+
+                        var readEmployee = JsonConvert.DeserializeObject<EmployeeModel>(buffer1);
+                        return RedirectToAction("Details", new { id = readEmployee.Id });
+                    }
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception err)
                 {
-                    if (!EmployeeModelExists(employeeModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw new Exception("Error during edit!", err);
                 }
-                return RedirectToAction(nameof(Index));
+
             }
+
             return View(employeeModel);
         }
 
         // GET: Employee/Delete/5
         public async Task<IActionResult> Delete(string? id)
         {
-            if (id == null)
+            using (var client = new HttpClient())
             {
-                return NotFound();
+                try
+                {
+                    var getEmployee = client.GetAsync("https://localhost:44310/api/employee/details?id=" + id);
+                    getEmployee.Wait();
+
+                    var result = getEmployee.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var buffer = await result.Content.ReadAsStreamAsync();
+                        var buffer1 = await result.Content.ReadAsStringAsync();
+
+                        var readEmployee = JsonConvert.DeserializeObject<EmployeeModel>(buffer1);
+                        return View(readEmployee);
+                    }
+                }
+                catch (Exception err)
+                {
+                    throw new Exception("Error on getting details!", err);
+                }
+
             }
 
-            var employeeModel = await _context.EmployeeModel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (employeeModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(employeeModel);
+            return NotFound();
         }
 
         // POST: Employee/Delete/5
@@ -215,15 +235,111 @@ namespace HRSystem_Core.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var employeeModel = await _context.EmployeeModel.FindAsync(id);
-            _context.EmployeeModel.Remove(employeeModel);
-            await _context.SaveChangesAsync();
+
+
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    var deleteEmployee = client.DeleteAsync("https://localhost:44310/api/employee?id=" + id);
+                    deleteEmployee.Wait();
+
+                    var result = deleteEmployee.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var buffer = await result.Content.ReadAsStreamAsync();
+                        var buffer1 = await result.Content.ReadAsStringAsync();
+
+                        var readEmployee = JsonConvert.DeserializeObject<EmployeeModel>(buffer1);
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                catch (Exception err)
+                {
+                    throw new Exception("Error during delete!", err);
+                }
+
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeModelExists(string id)
+        public IActionResult ComputeSalary(string id)
         {
-            return _context.EmployeeModel.Any(e => e.Id == id);
+            return View(new EmployeeViewModel() { EmployeeId = id });
+        }
+
+
+        // POST: Employee/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ComputeSalary([Bind("EmployeeId,DaysPresent,WorkDaysInMonth")] EmployeeViewModel employeeViewModel)
+        {
+            var returnObject = new EmployeeViewModel();
+            returnObject.EmployeeId = employeeViewModel.EmployeeId;
+            returnObject.DaysPresent = employeeViewModel.DaysPresent;
+            returnObject.WorkDaysInMonth = employeeViewModel.WorkDaysInMonth;
+
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    //HTTP GET
+                    var getEmployee = client.GetAsync("https://localhost:44310/api/employee/details?id=" + employeeViewModel.EmployeeId);
+                    getEmployee.Wait();
+
+                    var result = getEmployee.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var buffer = await result.Content.ReadAsStreamAsync();
+                        var buffer1 = await result.Content.ReadAsStringAsync();
+                        if (ViewBag.Salary == null)
+                        {
+
+                            ViewBag.Salary = new EmployeeViewModel();
+                        }
+                        var readEmployee = JsonConvert.DeserializeObject<EmployeeModel>(buffer1);
+                        returnObject.Employee = readEmployee;
+                    }
+                }
+                catch (Exception err)
+                {
+                    throw new Exception("Error while getting details!", err);
+                }
+
+            }
+
+            using (var client = new HttpClient())
+            {
+                try
+                {
+                    var getSalary = client.GetAsync("https://localhost:44310/api/employee/ComputeSalary?id=" + employeeViewModel.EmployeeId + 
+                                                                                                "&daysPresent=" + employeeViewModel.DaysPresent +
+                                                                                                "&workDaysInMonth=" + employeeViewModel.WorkDaysInMonth);
+                    getSalary.Wait();
+
+                    var result = getSalary.Result;
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var buffer = await result.Content.ReadAsStreamAsync();
+                        var buffer1 = await result.Content.ReadAsStringAsync();
+
+                        var readSalary = JsonConvert.DeserializeObject<double>(buffer1);
+
+                        returnObject.Salary = readSalary;
+                        return View("Details", returnObject);
+                    }
+                }
+                catch (Exception err)
+                {
+                    throw new Exception("Error during computation of salary!", err);
+                }
+
+            }
+
+            return View("Details", employeeViewModel);
         }
     }
 }

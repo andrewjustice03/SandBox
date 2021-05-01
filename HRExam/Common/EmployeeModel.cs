@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Common
@@ -18,14 +19,19 @@ namespace Common
 
         public string Name { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime Birthday { get; set; }
 
         public string TIN { get; set; }
 
+        [Display(Name = "Employee Type")]
         public EmployeeTypeEnum EmployeeType { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:n2}", ApplyFormatInEditMode = true)]
         public double Rate { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:P2}")]
+        [Display(Name = "Tax (%)")]
         public double Tax { get; set; }
     }
 }
