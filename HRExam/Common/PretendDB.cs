@@ -6,6 +6,6 @@ namespace Common
 {
     public static class PretendDB
     {
-        public static HashSet<EmployeeModel> Employees { get; set; }
+        public static EmployeeList Employees { get; set; }
     }
 }

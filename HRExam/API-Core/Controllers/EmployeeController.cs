@@ -15,9 +15,19 @@ namespace API_Core.Controllers
     public class EmployeeController : ControllerBase
     {
         [HttpGet]
-        public IEnumerable<EmployeeModel> Get()
+        public List<EmployeeModel> Get()
         {
-            return PretendDB.Employees;
+            if (PretendDB.Employees == null)
+            {
+                return new List<EmployeeModel>();
+            }
+            return PretendDB.Employees.EmployeeCollection;
+        }
+
+        [HttpGet("Details")]
+        public EmployeeModel Details(string id)
+        {
+            return PretendDB.Employees.EmployeeCollection.First(x => x.Id == id);
         }
 
         [HttpPost]
@@ -25,17 +35,17 @@ namespace API_Core.Controllers
         {
             if (PretendDB.Employees == null)
             {
-                PretendDB.Employees = new HashSet<EmployeeModel>();
+                PretendDB.Employees = new EmployeeList();
             }
-            employeeModel.Id = Guid.NewGuid();
-            PretendDB.Employees.Add(employeeModel);
+            employeeModel.Id = Guid.NewGuid().ToString();
+            PretendDB.Employees.EmployeeCollection.Add(employeeModel);
             return employeeModel;
         }
 
         [HttpPut]
         public EmployeeModel Put(EmployeeModel employeeModel)
         {
-            var modelToUpdate = PretendDB.Employees.FirstOrDefault(_ => _.Id == employeeModel.Id);
+            var modelToUpdate = PretendDB.Employees.EmployeeCollection.FirstOrDefault(_ => _.Id == employeeModel.Id);
 
             if (modelToUpdate != null)
             {
@@ -51,14 +61,14 @@ namespace API_Core.Controllers
         }
 
         [HttpDelete]
-        public void Delete(EmployeeModel employeeModel)
+        public void Delete(string id)
         {
 
-            var modelToDelete = PretendDB.Employees.FirstOrDefault(_ => _.Id == employeeModel.Id);
+            var modelToDelete = PretendDB.Employees.EmployeeCollection.FirstOrDefault(_ => _.Id == id);
 
             if (modelToDelete != null)
             {
-                PretendDB.Employees.Remove(modelToDelete);
+                PretendDB.Employees.EmployeeCollection.Remove(modelToDelete);
             }
         }
 
@@ -69,7 +79,7 @@ namespace API_Core.Controllers
             if (Guid.TryParse(id, out guid))
             {
 
-                var modelToProcess = PretendDB.Employees.FirstOrDefault(_ => _.Id == guid);
+                var modelToProcess = PretendDB.Employees.EmployeeCollection.FirstOrDefault(_ => _.Id == guid.ToString());
 
                 if (modelToProcess != null)
                 {
